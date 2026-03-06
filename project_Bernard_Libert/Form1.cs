@@ -32,7 +32,7 @@ namespace project_Bernard_Libert
             this.Controls.Clear();
 
             Button buttonNewProject = new Button();
-            buttonNewProject.Text = "project toevoegen";
+            buttonNewProject.Text = "projectje toevoegen";
             buttonNewProject.Location = new Point(350, 250);
             buttonNewProject.Size = new Size(300, 100);
             buttonNewProject.Font = new Font("Segoe UI", 18, FontStyle.Bold);
@@ -152,8 +152,8 @@ namespace project_Bernard_Libert
                 }
                 if (kolom == -1)
                 {
-                    string id = dataGridView.Rows[rij].Cells[kolom + 1].Value.ToString();
-                    deleteRow(id);
+                    string werf = dataGridView.Rows[rij].Cells[kolom + 1].Value.ToString();
+                    deleteRow(werf);
                 }
             };
 
@@ -163,14 +163,14 @@ namespace project_Bernard_Libert
 
             comboBox.SelectedIndexChanged += (sender, e) =>
             {
-                string naam = comboBox.SelectedItem.ToString();
-                showProject(naam);
+                string werf = comboBox.SelectedItem.ToString();
+                showProject(werf);
             };
         }
         void loadComboBox(ComboBox comboBox)
         {
             comboBox.Items.Clear();
-            string query = "SELECT Naam FROM Demo_Project_Bernard_Libert";
+            string query = "SELECT werf FROM Bernard_Libert";
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 // Open the connection
@@ -182,17 +182,17 @@ namespace project_Bernard_Libert
                     {
                         while (reader.Read())
                         {
-                            string naam = reader.GetString("Naam");
-                            comboBox.Items.Add(naam);
+                            string werf = reader.GetString("werf");
+                            comboBox.Items.Add(werf);
                         }
                     }
                 }
 
             }
         }
-        void showProject(string naam)
+        void showProject(string werf)
         {
-            string query = $"select * from Demo_Project_Bernard_Libert where Naam = '{naam}'";
+            string query = $"select * from Bernard_Libert where werf = '{werf}'";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -212,7 +212,7 @@ namespace project_Bernard_Libert
         }
         void showAllProjects()
         {
-            string query = $"select * from Demo_Project_Bernard_Libert";
+            string query = $"select * from Bernard_Libert";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -232,15 +232,16 @@ namespace project_Bernard_Libert
         }
         void addRow(FormAdd formAdd)
         {
-            string query = "INSERT INTO `Demo_Project_Bernard_Libert`(Naam, Locatie, ExtraInfo) VALUES (@Naam, @Locatie, @ExtraInfo)";
+            string query = "INSERT INTO `Bernard_Libert`(werf, klant, aannemer, extra_info) VALUES (@werf, @klant, @aannemer, @extra_info)";
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
-                    command.Parameters.AddWithValue("@Naam", formAdd.addNaam);
-                    command.Parameters.AddWithValue("@Locatie", formAdd.addLocatie);
-                    command.Parameters.AddWithValue("@ExtraInfo", formAdd.addExtraInfo);
+                    command.Parameters.AddWithValue("@werf", formAdd.addWerf);
+                    command.Parameters.AddWithValue("@klant", formAdd.addKlant);
+                    command.Parameters.AddWithValue("@aannemer", formAdd.addAannemer);
+                    command.Parameters.AddWithValue("@extra_info", formAdd.addExtraInfo);
                     int rowsAffected = command.ExecuteNonQuery(); // Voert de INSERT uit
                     Console.WriteLine($"{rowsAffected} rij(en) toegevoegd.");
                     showAllProjects();
@@ -251,16 +252,16 @@ namespace project_Bernard_Libert
         }
         void editRow(FormEdit formEdit, string waarde)
         {
-            string query = "UPDATE Demo_Project_Bernard_Libert SET Naam = @Naam, Locatie = @Locatie, ExtraInfo = @ExtraInfo WHERE id = @id";
+            string query = "Update `Bernard_Libert`(werf, klant, aannemer, extra_info) VALUES (@werf, @klant, @aannemer, @extra_info)";
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
-                    command.Parameters.AddWithValue("@Naam", formEdit.EditNaam);
-                    command.Parameters.AddWithValue("@Locatie", formEdit.EditLocatie);
-                    command.Parameters.AddWithValue("@ExtraInfo", formEdit.EditExtraInfo);
-                    command.Parameters.AddWithValue("@id", waarde);
+                    command.Parameters.AddWithValue("@werf", formEdit.editWerf);
+                    command.Parameters.AddWithValue("@klant", formEdit.editKlant);
+                    command.Parameters.AddWithValue("@aannemer", formEdit.editAannemer);
+                    command.Parameters.AddWithValue("@extra_info", formEdit.editExtraInfo);
                     int rowsAffected = command.ExecuteNonQuery(); // Voert de INSERT uit
                     Console.WriteLine($"{rowsAffected} rij(en) toegevoegd.");
                     showAllProjects();
@@ -269,15 +270,15 @@ namespace project_Bernard_Libert
 
             }
         }
-        void deleteRow(string id)
+        void deleteRow(string werf)
         {
-            string query = "DELETE FROM Demo_Project_Bernard_Libert WHERE id = @id";
+            string query = "DELETE FROM Bernard_Libert WHERE werf = @werf";
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
-                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@werf", werf);
                     int rowsAffected = command.ExecuteNonQuery(); // Voert de INSERT uit
                     Console.WriteLine($"{rowsAffected} rij(en) toegevoegd.");
                     showAllProjects();
