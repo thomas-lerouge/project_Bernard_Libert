@@ -25,18 +25,43 @@ namespace project_Bernard_Libert
 
             this.Size = new Size(1000, 800);
 
+            this.WindowState = FormWindowState.Maximized;
+
             loadHome();
+            loadMenuPanel();
+        }
+        void loadMenuPanel()
+        {
+            Panel MenuPanel = new Panel();
+            MenuPanel.Size = new Size(this.Width / 5, this.Height);
+            MenuPanel.BackColor = Color.Gray;
+            Controls.Add(MenuPanel);
+
+            Label lblHome = new Label();
+            lblHome.BackColor = Color.DarkGray;
+            lblHome.Location = new Point(0, 0);
+            lblHome.Size = new Size(MenuPanel.Width, 50);
+            lblHome.ForeColor = Color.White;
+            lblHome.Text = "home";
+            lblHome.TextAlign = ContentAlignment.MiddleCenter;
+            lblHome.Font = new Font(lblHome.Font.FontFamily,15,FontStyle.Bold);
+            MenuPanel.Controls.Add(lblHome);
         }
         void loadHome()
         {
             this.Controls.Clear();
+
+            Panel panelHome = new Panel();
+            panelHome.Size = new Size(this.Width/5 * 4, this.Height);
+            panelHome.Location = new Point(this.Width / 5, 0);
+            Controls.Add(panelHome);
 
             Button buttonNewProject = new Button();
             buttonNewProject.Text = "projectje toevoegen";
             buttonNewProject.Location = new Point(350, 250);
             buttonNewProject.Size = new Size(300, 100);
             buttonNewProject.Font = new Font("Segoe UI", 18, FontStyle.Bold);
-            Controls.Add(buttonNewProject);
+            panelHome.Controls.Add(buttonNewProject);
 
             buttonNewProject.Click += (sender, e) =>
             {
@@ -54,7 +79,7 @@ namespace project_Bernard_Libert
             buttonToonProjecten.Location = new Point(350, 100);
             buttonToonProjecten.Size = new Size(300, 100);
             buttonToonProjecten.Font = new Font("Segoe UI", 18, FontStyle.Bold);
-            Controls.Add(buttonToonProjecten);
+            panelHome.Controls.Add(buttonToonProjecten);
 
             buttonToonProjecten.Click += (sender, e) =>
             {
@@ -84,6 +109,7 @@ namespace project_Bernard_Libert
             buttonHome.Click += (sender, e) =>
             {
                 loadHome();
+                loadMenuPanel();
             };
 
             Button buttonNewProject = new Button();
@@ -282,6 +308,7 @@ namespace project_Bernard_Libert
                     int rowsAffected = command.ExecuteNonQuery(); // Voert de INSERT uit
                     Console.WriteLine($"{rowsAffected} rij(en) toegevoegd.");
                     showAllProjects();
+                    loadComboBox(comboBox);
                 }
 
             }
