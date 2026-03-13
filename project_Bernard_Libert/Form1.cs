@@ -19,46 +19,51 @@ namespace project_Bernard_Libert
 
         ComboBox comboBox = new ComboBox();
 
+        Panel panelHome = new Panel();
+
         public Form1()
         {
             InitializeComponent();
-
-            this.Size = new Size(1000, 800);
-
             this.WindowState = FormWindowState.Maximized;
 
-            loadHome();
+            loadMain();
             loadMenuPanel();
+            loadHeaderPanel();
+        }
+        void loadHeaderPanel()
+        {
+            Panel headerPanel = new Panel();
+            headerPanel.Dock = DockStyle.Top;
+            headerPanel.Height = 80;
+            headerPanel.BackColor = Color.FromArgb(24, 28, 38);
+            Controls.Add(headerPanel);
         }
         void loadMenuPanel()
         {
-            Panel MenuPanel = new Panel();
-            MenuPanel.Size = new Size(this.Width / 5, this.Height);
-            MenuPanel.BackColor = Color.Gray;
-            Controls.Add(MenuPanel);
+            Panel menuPanel = new Panel();
+            menuPanel.Dock = DockStyle.Left;
+            menuPanel.Width = 200;
+            menuPanel.BackColor = Color.Gray;
+            Controls.Add(menuPanel);
 
             Label lblHome = new Label();
             lblHome.BackColor = Color.DarkGray;
             lblHome.Location = new Point(0, 0);
-            lblHome.Size = new Size(MenuPanel.Width, 50);
+            lblHome.Size = new Size(menuPanel.Width, 50);
             lblHome.ForeColor = Color.White;
             lblHome.Text = "home";
             lblHome.TextAlign = ContentAlignment.MiddleCenter;
             lblHome.Font = new Font(lblHome.Font.FontFamily,15,FontStyle.Bold);
-            MenuPanel.Controls.Add(lblHome);
+            menuPanel.Controls.Add(lblHome);
         }
-        void loadHome()
+        void loadMain()
         {
-            this.Controls.Clear();
-
-            Panel panelHome = new Panel();
-            panelHome.Size = new Size(this.Width/5 * 4, this.Height);
-            panelHome.Location = new Point(this.Width / 5, 0);
+            panelHome.Dock = DockStyle.Fill;
             Controls.Add(panelHome);
 
             Button buttonNewProject = new Button();
             buttonNewProject.Text = "projectje toevoegen";
-            buttonNewProject.Location = new Point(350, 250);
+            buttonNewProject.Location = new Point(0, 0);
             buttonNewProject.Size = new Size(300, 100);
             buttonNewProject.Font = new Font("Segoe UI", 18, FontStyle.Bold);
             panelHome.Controls.Add(buttonNewProject);
@@ -88,7 +93,6 @@ namespace project_Bernard_Libert
         }
         void loadProjecten()
         {
-            this.Controls.Clear();
 
             comboBox.Location = new Point(10, 60);
             Controls.Add(comboBox);
@@ -96,27 +100,13 @@ namespace project_Bernard_Libert
             dataGridView.Location = new Point(10, 100);
             dataGridView.Size = new Size(500, 300);
             dataGridView.ScrollBars = ScrollBars.Vertical;
-            Controls.Add(dataGridView);
-
-            PictureBox buttonHome = new PictureBox();
-            buttonHome.Size = new Size(40, 40);
-            buttonHome.Location = new Point(10, 10);
-            buttonHome.Image = Image.FromFile("home.png");
-            buttonHome.SizeMode = PictureBoxSizeMode.Zoom;
-            buttonHome.BorderStyle = BorderStyle.FixedSingle;
-            Controls.Add(buttonHome);
-
-            buttonHome.Click += (sender, e) =>
-            {
-                loadHome();
-                loadMenuPanel();
-            };
+            panelHome.Controls.Add(dataGridView);
 
             Button buttonNewProject = new Button();
             buttonNewProject.Text = "project toevoegen";
             buttonNewProject.Location = new Point(10, 410);
             buttonNewProject.Size = new Size(100, 50);
-            Controls.Add(buttonNewProject);
+            panelHome.Controls.Add(buttonNewProject);
 
             buttonNewProject.Click += (sender, e) =>
             {
@@ -133,7 +123,7 @@ namespace project_Bernard_Libert
             buttonToonAlles.Text = "toon alle projecten";
             buttonToonAlles.Location = new Point(110, 410);
             buttonToonAlles.Size = new Size(100, 50);
-            Controls.Add(buttonToonAlles);
+            panelHome.Controls.Add(buttonToonAlles);
 
             buttonToonAlles.Click += (sender, e) =>
             {
@@ -147,7 +137,7 @@ namespace project_Bernard_Libert
             lblEditInfo.ForeColor = Color.Red;
             lblEditInfo.BorderStyle = BorderStyle.FixedSingle;
             lblEditInfo.AutoSize = true;
-            Controls.Add(lblEditInfo);
+            panelHome.Controls.Add(lblEditInfo);
 
             Label lblDeleteInfo = new Label();
             lblDeleteInfo.Text = "Klik op de lege plaats voor een project\r\nom het project te verwijderen";
@@ -155,7 +145,7 @@ namespace project_Bernard_Libert
             lblDeleteInfo.ForeColor = Color.Red;
             lblDeleteInfo.BorderStyle = BorderStyle.FixedSingle;
             lblDeleteInfo.AutoSize = true;
-            Controls.Add(lblDeleteInfo);
+            panelHome.Controls.Add(lblDeleteInfo);
 
             dataGridView.CellClick += (sender, e) =>
             {
