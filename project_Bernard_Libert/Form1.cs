@@ -387,20 +387,17 @@ namespace project_Bernard_Libert
                 nieuwProject.Aannemer = textBoxAannemer.Text;
                 nieuwProject.ExtraInfo = textBoxExtraInfo.Text;
 
-                bool gelijk = false;
-
                 foreach(Project project in alleProjecten)
                 {
                     if (nieuwProject.Naam.Equals(project.Naam))
                     {
-                        gelijk = true;
+                        addRow(nieuwProject);
                     }
-                }
-                if (gelijk == false)
-                {
-                    addRow(nieuwProject);
-                }
-                
+                    else
+                    {
+
+                    }
+                }                
 
                 textBoxAannemer.Text = "";
                 textBoxExtraInfo.Text = "";
