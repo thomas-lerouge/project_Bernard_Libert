@@ -293,6 +293,7 @@ namespace project_Bernard_Libert
                     {
                         string werf = lblInfoNaam.Text;
                         db.DeleteProject(werf);
+                        LogToevoegen("Project verwijderd: " + werf);
                         loadProjecten();
                         lblInfoNaam.Text = "Naam: ";
                         lblInfoKlant.Text = "Klant: ";
