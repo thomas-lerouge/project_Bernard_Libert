@@ -13,7 +13,9 @@ namespace project_Bernard_Libert
 {
     public partial class Form1 : Form
     {
-        string connectionString = "Server=bart.go-ao.be;Database=06IncoThomas;UserID=06IncoThomas;Password=kQ5QYVHpnghg0K9F;";
+        DatabaseManager db = new DatabaseManager();
+
+        List<string> logLijst = new List<string>();
 
         DataGridView dataGridView = new DataGridView();
 
@@ -93,6 +95,27 @@ namespace project_Bernard_Libert
             lblTitel.Font = new Font("Segoe UI", 16, FontStyle.Bold);
             lblTitel.AutoSize = true;
             headerPanel.Controls.Add(lblTitel);
+
+            Panel panelZoeken = new Panel();
+            panelZoeken.Location = new Point(450, 20);
+            panelZoeken.Size = new Size(280, 38);
+            panelZoeken.BackColor = Color.FromArgb(40, 44, 58);
+            panelZoeken.BorderStyle = BorderStyle.FixedSingle;
+            headerPanel.Controls.Add(panelZoeken);
+
+            TextBox textBoxZoeken = new TextBox();
+            textBoxZoeken.Location = new Point(8, 8);
+            textBoxZoeken.Size = new Size(262, 22);
+            textBoxZoeken.BackColor = Color.FromArgb(40, 44, 58);
+            textBoxZoeken.ForeColor = Color.White;
+            textBoxZoeken.BorderStyle = BorderStyle.None;
+            textBoxZoeken.Font = new Font("Segoe UI", 11);
+            panelZoeken.Controls.Add(textBoxZoeken);
+
+            textBoxZoeken.TextChanged += (sender, e) =>
+            {
+                ZoekProjecten(textBoxZoeken.Text);
+            };
 
         }
         void loadMenuPanel()
@@ -259,28 +282,40 @@ namespace project_Bernard_Libert
             {
                 if (lblInfoNaam.Text != "Naam: ")
                 {
-                    string werf = lblInfoNaam.Text;
-                    deleteRow(werf);
-                    loadProjecten();
-                    lblInfoNaam.Text = "Naam: ";
-                    lblInfoKlant.Text = "Klant: ";
-                    lblInfoAannemer.Text = "Aannemer: ";
-                    lblInfoExtraInfo.Text = "Extra Info: ";
+                    DialogResult result = MessageBox.Show(
+                        "Weet je zeker dat je \"" + lblInfoNaam.Text + "\" wil verwijderen?",
+                        "Project verwijderen",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning
+                    );
+
+                    if (result == DialogResult.Yes)
+                    {
+                        string werf = lblInfoNaam.Text;
+                        db.DeleteProject(werf);
+                        loadProjecten();
+                        lblInfoNaam.Text = "Naam: ";
+                        lblInfoKlant.Text = "Klant: ";
+                        lblInfoAannemer.Text = "Aannemer: ";
+                        lblInfoExtraInfo.Text = "Extra Info: ";
+                    }
                 }
             };
 
         }
         void loadProjecten()
         {
+            alleProjecten = db.GetProjecten();
+
+            ToonProjecten(alleProjecten);
+        }
+        void ToonProjecten(List<Project> projecten)
+        {
             PanelRijen.Controls.Clear();
-            alleProjecten.Clear();
 
-            projectenInlezen();
-
-            for (int i = 0; i < alleProjecten.Count; i++)
+            for (int i = 0; i < projecten.Count; i++)
             {
-                Project project = alleProjecten[i];
-
+                Project project = projecten[i];
                 Panel panelRij = new Panel();
                 panelRij.Location = new Point(10, 10 + (i * 40) + (i * 5));
                 panelRij.Size = new Size(600, 40);
@@ -297,7 +332,6 @@ namespace project_Bernard_Libert
                 rijNaam.TextAlign = ContentAlignment.MiddleCenter;
                 rijNaam.Font = new Font(rijNaam.Font.FontFamily, 12, FontStyle.Regular);
                 panelRij.Controls.Add(rijNaam);
-
                 rijNaam.Click += (sender, e) => loadDetails(project);
 
                 Label rijKlant = new Label();
@@ -307,7 +341,6 @@ namespace project_Bernard_Libert
                 rijKlant.TextAlign = ContentAlignment.MiddleCenter;
                 rijKlant.Font = new Font(rijKlant.Font.FontFamily, 12, FontStyle.Regular);
                 panelRij.Controls.Add(rijKlant);
-
                 rijKlant.Click += (sender, e) => loadDetails(project);
 
                 Label rijAannemer = new Label();
@@ -317,7 +350,6 @@ namespace project_Bernard_Libert
                 rijAannemer.TextAlign = ContentAlignment.MiddleCenter;
                 rijAannemer.Font = new Font(rijAannemer.Font.FontFamily, 12, FontStyle.Regular);
                 panelRij.Controls.Add(rijAannemer);
-
                 rijAannemer.Click += (sender, e) => loadDetails(project);
             }
         }
@@ -387,17 +419,25 @@ namespace project_Bernard_Libert
                 nieuwProject.Aannemer = textBoxAannemer.Text;
                 nieuwProject.ExtraInfo = textBoxExtraInfo.Text;
 
-                foreach(Project project in alleProjecten)
-                {
-                    if (nieuwProject.Naam.Equals(project.Naam))
-                    {
-                        addRow(nieuwProject);
-                    }
-                    else
-                    {
+                bool bestaatAl = false;
 
+                foreach (Project project in alleProjecten)
+                {
+                    if (nieuwProject.Naam == project.Naam)
+                    {
+                        bestaatAl = true;
                     }
-                }                
+                }
+
+                if (!bestaatAl)
+                {
+                    db.AddProject(nieuwProject);
+                    LogToevoegen("Project toegevoegd: " + nieuwProject.Naam);
+                }
+                else
+                {
+                    MessageBox.Show("Project bestaat al.");
+                }
 
                 textBoxAannemer.Text = "";
                 textBoxExtraInfo.Text = "";
@@ -494,7 +534,9 @@ namespace project_Bernard_Libert
 
                 string oudeWerf = lblInfoNaam.Text;
 
-                editRow(editProject, oudeWerf);
+                db.EditProject(editProject, oudeWerf);
+
+                LogToevoegen("Project bewerkt: " + editProject.Naam);
 
                 textBoxAannemerEdit.Text = "";
                 textBoxExtraInfoEdit.Text = "";
@@ -532,84 +574,7 @@ namespace project_Bernard_Libert
              
             };
         }
-        void addRow(Project nieuwProject)
-        {
-            string query = "INSERT INTO `Bernard_Libert`(werf, klant, aannemer, extra_info) VALUES (@werf, @klant, @aannemer, @extra_info)";
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                using (MySqlCommand command = new MySqlCommand(query, connection))
-                {
-                    connection.Open();
-                    command.Parameters.AddWithValue("@werf", nieuwProject.Naam);
-                    command.Parameters.AddWithValue("@klant", nieuwProject.Klant);
-                    command.Parameters.AddWithValue("@aannemer", nieuwProject.Aannemer);
-                    command.Parameters.AddWithValue("@extra_info", nieuwProject.ExtraInfo);
-                    int rowsAffected = command.ExecuteNonQuery(); // Voert de INSERT uit
-                    Console.WriteLine($"{rowsAffected} rij(en) toegevoegd.");
-                }
-
-            }
-        }
-        void editRow(Project editProject, string oudeWerf)
-        {
-            string query = "UPDATE Bernard_Libert SET werf = @werf, klant = @klant, aannemer = @aannemer, extra_info = @extra_info WHERE werf = @oudeWerf";
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                using (MySqlCommand command = new MySqlCommand(query, connection))
-                {
-                    connection.Open();
-                    command.Parameters.AddWithValue("@oudeWerf", oudeWerf);
-                    command.Parameters.AddWithValue("@werf", editProject.Naam);
-                    command.Parameters.AddWithValue("@klant", editProject.Klant);
-                    command.Parameters.AddWithValue("@aannemer", editProject.Aannemer);
-                    command.Parameters.AddWithValue("@extra_info", editProject.ExtraInfo);
-                    int rowsAffected = command.ExecuteNonQuery(); // Voert de INSERT uit
-                    Console.WriteLine($"{rowsAffected} rij(en) toegevoegd.");
-                }
-
-            }
-        }
-        void deleteRow(string werf)
-        {
-            string query = "DELETE FROM Bernard_Libert WHERE werf = @werf";
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                using (MySqlCommand command = new MySqlCommand(query, connection))
-                {
-                    connection.Open();
-                    command.Parameters.AddWithValue("@werf", werf);
-                    int rowsAffected = command.ExecuteNonQuery(); // Voert de INSERT uit
-                    Console.WriteLine($"{rowsAffected} rij(en) toegevoegd.");
-                }
-            }
-        }
-        void projectenInlezen()
-        {
-            alleProjecten.Clear();
-            string query = "SELECT * FROM Bernard_Libert";
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                // Open the connection
-                connection.Open();
-                Console.WriteLine("Connection successfully established!");
-
-                using (MySqlCommand command = new MySqlCommand(query, connection))
-                {
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Project project = new Project();
-                            project.Naam = reader.GetString("werf");
-                            project.Klant = reader.GetString("klant");
-                            project.Aannemer = reader.GetString("aannemer");
-                            project.ExtraInfo = reader.GetString("extra_info");
-                            alleProjecten.Add(project);
-                        }
-                    }
-                }
-            }
-        }
+       
         void loadDetails(Project project)
         {
             lblInfoNaam.Text = project.Naam;
@@ -627,9 +592,29 @@ namespace project_Bernard_Libert
             textBoxKlantEdit.Text = editProject.Klant;
             textBoxWerfEdit.Text = editProject.Naam;
         }
+        void ZoekProjecten(string zoekTekst)
+        {
+            List<Project> gefilterdeProjecten = new List<Project>();
+
+            foreach (Project project in alleProjecten)
+            {
+                if (project.Naam.ToLower().Contains(zoekTekst.ToLower()) ||
+                    project.Klant.ToLower().Contains(zoekTekst.ToLower()) ||
+                    project.Aannemer.ToLower().Contains(zoekTekst.ToLower()))
+                {
+                    gefilterdeProjecten.Add(project);
+                }
+            }
+
+            ToonProjecten(gefilterdeProjecten);
+        }
+        void LogToevoegen(string actie)
+        {
+            string tijdstip = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+            logLijst.Add(tijdstip + " — " + actie);
+        }
     }
-    // controle of naam al bestaat
-    // delete button veiliger maken
     // meer indelingen
     // sorteer knop maken
+    // datum toevoegen
 }
