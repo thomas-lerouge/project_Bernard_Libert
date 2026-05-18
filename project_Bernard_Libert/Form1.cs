@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using System.IO;
 
 namespace project_Bernard_Libert
 {
@@ -16,6 +17,7 @@ namespace project_Bernard_Libert
         DatabaseManager db = new DatabaseManager();
 
         List<string> logLijst = new List<string>();
+        string logBestand = "log.txt";
 
         DataGridView dataGridView = new DataGridView();
 
@@ -26,8 +28,11 @@ namespace project_Bernard_Libert
         Panel PanelDetails = new Panel();
         Panel panelAddRow = new Panel();
         Panel panelEditRow = new Panel();
+        Panel panelLog = new Panel();
 
         int aantalProjecten = 0;
+
+        bool oplopend = true;
 
         List<Project> alleProjecten = new List<Project>();
 
@@ -57,6 +62,11 @@ namespace project_Bernard_Libert
             loadPanelEditRow();
             panelEditRow.Visible = false;
 
+            loadLogPanel();
+            panelLog.Visible = false;
+
+            LaadLogBestand();
+
             loadProjecten();
 
         }
@@ -71,7 +81,7 @@ namespace project_Bernard_Libert
             Controls.Add(headerPanel);
 
             Button buttonAddProject = new Button();
-            buttonAddProject.Text = "+ Nieuw Project";
+            buttonAddProject.Text = "✚ Nieuw Project";
             buttonAddProject.Location = new Point(1000, 15);
             buttonAddProject.Size = new Size(150, 50);
             buttonAddProject.BackColor = Color.FromArgb(0, 122, 204);
@@ -117,6 +127,23 @@ namespace project_Bernard_Libert
                 ZoekProjecten(textBoxZoeken.Text);
             };
 
+            Button btnSorteer = new Button();
+            btnSorteer.Text = "⇅";
+            btnSorteer.Location = new Point(740, 22);
+            btnSorteer.Size = new Size(40, 35);
+            btnSorteer.BackColor = Color.FromArgb(40, 44, 58);
+            btnSorteer.ForeColor = Color.White;
+            btnSorteer.FlatStyle = FlatStyle.Flat;
+            btnSorteer.FlatAppearance.BorderSize = 0;
+            btnSorteer.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+
+            headerPanel.Controls.Add(btnSorteer);
+
+            btnSorteer.Click += (sender, e) =>
+            {
+                SorteerProjecten();
+            };
+
         }
         void loadMenuPanel()
         {
@@ -137,6 +164,33 @@ namespace project_Bernard_Libert
             lblAllProjects.TextAlign = ContentAlignment.MiddleCenter;
             lblAllProjects.Font = new Font(lblAllProjects.Font.FontFamily, 15, FontStyle.Regular);
             menuPanel.Controls.Add(lblAllProjects);
+
+            lblAllProjects.Click += (sender, e) =>
+            {
+                panelHome.Visible = true;
+                panelLog.Visible = false;
+                panelEditRow.Visible = false;
+                panelAddRow.Visible = false;
+                loadProjecten();
+            };
+
+            Label lblLog = new Label();
+            lblLog.BackColor = Color.FromArgb(21, 25, 50);
+            lblLog.Location = new Point(0, 50);
+            lblLog.Size = new Size(menuPanel.Width, 50);
+            lblLog.ForeColor = Color.White;
+            lblLog.Text = "Log";
+            lblLog.BorderStyle = BorderStyle.FixedSingle;
+            lblLog.TextAlign = ContentAlignment.MiddleCenter;
+            lblLog.Font = new Font(lblLog.Font.FontFamily, 15, FontStyle.Regular);
+            menuPanel.Controls.Add(lblLog);
+
+            lblLog.Click += (sender, e) =>
+            {
+                panelHome.Visible = false;
+                panelLog.Visible = true;
+                loadLog();
+            };
         }
         void loadMain()
         {
@@ -240,7 +294,7 @@ namespace project_Bernard_Libert
             PanelDetails.Controls.Add(lblInfoExtraInfo);
 
             Button btnEdit = new Button();
-            btnEdit.Text = "Edit";
+            btnEdit.Text = "🖉 Edit";
             btnEdit.Location = new Point(10, 210);
             btnEdit.Size = new Size(80, 30);
             btnEdit.BackColor = Color.FromArgb(0, 122, 204);
@@ -269,7 +323,7 @@ namespace project_Bernard_Libert
             };
 
             Button btnDelete = new Button();
-            btnDelete.Text = "Delete";
+            btnDelete.Text = "🗑️ Delete";
             btnDelete.Location = new Point(100, 210);
             btnDelete.Size = new Size(80, 30);
             btnDelete.BackColor = Color.FromArgb(200, 0, 0);
@@ -572,10 +626,20 @@ namespace project_Bernard_Libert
 
                 panelEditRow.Visible = false;
                 panelHome.Visible = true;
-             
+
             };
         }
-       
+        void loadLogPanel()
+        {
+            panelLog.Location = panelHome.Location;
+            panelLog.Size = panelHome.Size;
+            panelLog.BackColor = Color.FromArgb(18, 23, 29);
+            panelLog.BorderStyle = BorderStyle.FixedSingle;
+            panelLog.AutoScroll = true;
+
+            Controls.Add(panelLog);
+        }
+
         void loadDetails(Project project)
         {
             lblInfoNaam.Text = project.Naam;
@@ -612,10 +676,58 @@ namespace project_Bernard_Libert
         void LogToevoegen(string actie)
         {
             string tijdstip = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-            logLijst.Add(tijdstip + " — " + actie);
+            string logAdd = (tijdstip + " — " + actie);
+            logLijst.Add(logAdd);
+            File.AppendAllText(logBestand, logAdd + Environment.NewLine);
+        }
+        void loadLog()
+        {
+            panelLog.Controls.Clear();
+
+            Label titel = new Label();
+            titel.Text = "Logboek";
+            titel.Location = new Point(10, 10);
+            titel.Size = new Size(600, 30);
+            titel.Font = new Font("Segoe UI", 14, FontStyle.Bold);
+            titel.ForeColor = Color.White;
+
+            panelLog.Controls.Add(titel);
+
+            for (int i = 0; i < logLijst.Count; i++)
+            {
+                Label lblLogItem = new Label();
+
+                lblLogItem.Text = logLijst[i];
+                lblLogItem.Location = new Point(10, 60 + i * 35);
+                lblLogItem.Size = new Size(580, 30);
+
+                lblLogItem.ForeColor = Color.White;
+
+                panelLog.Controls.Add(lblLogItem);
+            }
+        }
+        void LaadLogBestand()
+        {
+            if (File.Exists(logBestand))
+            {
+                logLijst = File.ReadAllLines(logBestand).ToList();
+            }
+        }
+        void SorteerProjecten()
+        {
+            if (oplopend)
+            {
+                List<Project> gesorteerdeProjecten = alleProjecten.OrderBy(project => project.Naam).ToList();
+                ToonProjecten(gesorteerdeProjecten);
+            }
+            else
+            {
+                List<Project> gesorteerdeProjecten = alleProjecten.OrderByDescending(project => project.Naam).ToList();
+                ToonProjecten(gesorteerdeProjecten);
+            }
+            oplopend = !oplopend;
         }
     }
     // meer indelingen
-    // sorteer knop maken
     // datum toevoegen
 }
