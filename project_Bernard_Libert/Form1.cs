@@ -761,9 +761,9 @@ namespace project_Bernard_Libert
     }
     // meer indelingen
     //  achternaam-voornaam-Eindproject (zip)
-    //  *Project
-    //  *DevBlog (link + pdf)
-    //  *Feedback
-    //  *Referentielijst (.pdf)
-    //  *Presentatie (.pptx)
+    //  * Project
+    //  * DevBlog (link + pdf)
+    //  * Feedback
+    //  * Referentielijst (.pdf)
+    //  * Presentatie (.pptx)
 }
