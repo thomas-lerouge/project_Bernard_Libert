@@ -19,18 +19,12 @@ namespace project_Bernard_Libert
         List<string> logLijst = new List<string>();
         string logBestand = "log.txt";
 
-        DataGridView dataGridView = new DataGridView();
-
-        ComboBox comboBox = new ComboBox();
-
         Panel panelHome = new Panel();
         Panel PanelRijen = new Panel();
         Panel PanelDetails = new Panel();
         Panel panelAddRow = new Panel();
         Panel panelEditRow = new Panel();
         Panel panelLog = new Panel();
-
-        int aantalProjecten = 0;
 
         bool oplopend = true;
 
@@ -39,11 +33,13 @@ namespace project_Bernard_Libert
         Label lblInfoNaam = new Label();
         Label lblInfoKlant = new Label();
         Label lblInfoAannemer = new Label();
+        Label lblInfoDatum = new Label();
         Label lblInfoExtraInfo = new Label();
 
         TextBox textBoxWerfEdit = new TextBox();
         TextBox textBoxKlantEdit = new TextBox();
         TextBox textBoxAannemerEdit = new TextBox();
+        DateTimePicker dtpDatumEdit = new DateTimePicker();
         TextBox textBoxExtraInfoEdit = new TextBox();
 
 
@@ -285,8 +281,16 @@ namespace project_Bernard_Libert
             lblInfoAannemer.TextAlign = ContentAlignment.MiddleLeft;
             PanelDetails.Controls.Add(lblInfoAannemer);
 
+            lblInfoDatum.Text = "Datum: ";
+            lblInfoDatum.Location = new Point(10, 170);
+            lblInfoDatum.Size = new Size(320, 30);
+            lblInfoDatum.ForeColor = Color.White;
+            lblInfoDatum.Font = new Font(lblInfoDatum.Font.FontFamily, 12, FontStyle.Regular);
+            lblInfoDatum.TextAlign = ContentAlignment.MiddleLeft;
+            PanelDetails.Controls.Add(lblInfoDatum);
+
             lblInfoExtraInfo.Text = "Extra Info: ";
-            lblInfoExtraInfo.Location = new Point(10, 170);
+            lblInfoExtraInfo.Location = new Point(10, 210);
             lblInfoExtraInfo.Size = new Size(320, 30);
             lblInfoExtraInfo.ForeColor = Color.White;
             lblInfoExtraInfo.Font = new Font(lblInfoExtraInfo.Font.FontFamily, 12, FontStyle.Regular);
@@ -295,7 +299,7 @@ namespace project_Bernard_Libert
 
             Button btnEdit = new Button();
             btnEdit.Text = "🖉 Edit";
-            btnEdit.Location = new Point(10, 210);
+            btnEdit.Location = new Point(10, 260);
             btnEdit.Size = new Size(80, 30);
             btnEdit.BackColor = Color.FromArgb(0, 122, 204);
             btnEdit.FlatStyle = FlatStyle.Flat;
@@ -324,7 +328,7 @@ namespace project_Bernard_Libert
 
             Button btnDelete = new Button();
             btnDelete.Text = "🗑️ Delete";
-            btnDelete.Location = new Point(100, 210);
+            btnDelete.Location = new Point(100, 260);
             btnDelete.Size = new Size(80, 30);
             btnDelete.BackColor = Color.FromArgb(200, 0, 0);
             btnDelete.FlatStyle = FlatStyle.Flat;
@@ -447,19 +451,31 @@ namespace project_Bernard_Libert
             textBoxAannemer.Location = new Point(100, 110);
             panelAddRow.Controls.Add(textBoxAannemer);
 
+            Label lblDatum = new Label();
+            lblDatum.Text = "Datum:";
+            lblDatum.Size = new Size(80, 30);
+            lblDatum.Location = new Point(10, 160);
+            panelAddRow.Controls.Add(lblDatum);
+
+            DateTimePicker dtpDatum = new DateTimePicker();
+            dtpDatum.Location = new Point(100, 160);
+            dtpDatum.Format = DateTimePickerFormat.Short;
+            dtpDatum.Value = DateTime.Now;
+            panelAddRow.Controls.Add(dtpDatum);
+
             Label lblExtraInfo = new Label();
             lblExtraInfo.Text = "Extra info:";
             lblExtraInfo.Size = new Size(80, 30);
-            lblExtraInfo.Location = new Point(10, 160);
+            lblExtraInfo.Location = new Point(10, 210);
             panelAddRow.Controls.Add(lblExtraInfo);
 
             TextBox textBoxExtraInfo = new TextBox();
-            textBoxExtraInfo.Location = new Point(100, 160);
+            textBoxExtraInfo.Location = new Point(100, 210);
             panelAddRow.Controls.Add(textBoxExtraInfo);
 
             Button btnAdd = new Button();
             btnAdd.Text = "Add";
-            btnAdd.Location = new Point(100, 210);
+            btnAdd.Location = new Point(100, 260);
             btnAdd.BackColor = Color.FromArgb(0, 122, 204);
             btnAdd.FlatStyle = FlatStyle.Flat;
             btnAdd.FlatAppearance.BorderSize = 0;
@@ -472,6 +488,7 @@ namespace project_Bernard_Libert
                 nieuwProject.Naam = textBoxWerf.Text;
                 nieuwProject.Klant = textBoxKlant.Text;
                 nieuwProject.Aannemer = textBoxAannemer.Text;
+                nieuwProject.Datum = dtpDatum.Value;
                 nieuwProject.ExtraInfo = textBoxExtraInfo.Text;
 
                 bool bestaatAl = false;
@@ -499,6 +516,7 @@ namespace project_Bernard_Libert
                 textBoxKlant.Text = "";
                 textBoxWerf.Text = "";
 
+
                 panelAddRow.Visible = false;
                 panelHome.Visible = true;
 
@@ -507,7 +525,7 @@ namespace project_Bernard_Libert
 
             Button btnCancel = new Button();
             btnCancel.Text = "Cancel";
-            btnCancel.Location = new Point(200, 210);
+            btnCancel.Location = new Point(200, 260);
             btnCancel.BackColor = Color.FromArgb(200, 0, 0);
             btnCancel.FlatStyle = FlatStyle.Flat;
             btnCancel.FlatAppearance.BorderSize = 0;
@@ -560,19 +578,28 @@ namespace project_Bernard_Libert
             textBoxAannemerEdit.Location = new Point(100, 110);
             panelEditRow.Controls.Add(textBoxAannemerEdit);
 
+            Label lblDatum = new Label();
+            lblDatum.Text = "Datum:";
+            lblDatum.Size = new Size(80, 30);
+            lblDatum.Location = new Point(10, 160);
+            panelEditRow.Controls.Add(lblDatum);
+
+            dtpDatumEdit.Location = new Point(100, 160);
+            panelEditRow.Controls.Add(dtpDatumEdit);
+
             Label lblExtraInfo = new Label();
             lblExtraInfo.Text = "Extra info:";
             lblExtraInfo.Size = new Size(80, 30);
-            lblExtraInfo.Location = new Point(10, 160);
+            lblExtraInfo.Location = new Point(10, 210);
             panelEditRow.Controls.Add(lblExtraInfo);
 
-            textBoxExtraInfoEdit.Location = new Point(100, 160);
+            textBoxExtraInfoEdit.Location = new Point(100, 210);
             panelEditRow.Controls.Add(textBoxExtraInfoEdit);
 
 
             Button btnEdit = new Button();
             btnEdit.Text = "Edit";
-            btnEdit.Location = new Point(100, 210);
+            btnEdit.Location = new Point(100, 260);
             btnEdit.BackColor = Color.FromArgb(0, 122, 204);
             btnEdit.FlatStyle = FlatStyle.Flat;
             btnEdit.FlatAppearance.BorderSize = 0;
@@ -585,6 +612,7 @@ namespace project_Bernard_Libert
                 editProject.Naam = textBoxWerfEdit.Text;
                 editProject.Klant = textBoxKlantEdit.Text;
                 editProject.Aannemer = textBoxAannemerEdit.Text;
+                editProject.Datum = dtpDatumEdit.Value;
                 editProject.ExtraInfo = textBoxExtraInfoEdit.Text;
 
                 string oudeWerf = lblInfoNaam.Text;
@@ -606,12 +634,13 @@ namespace project_Bernard_Libert
                 lblInfoNaam.Text = editProject.Naam;
                 lblInfoAannemer.Text = "Aannemer:   " + editProject.Aannemer;
                 lblInfoKlant.Text = "Klant:   " + editProject.Klant;
+                lblInfoDatum.Text = "Datum:   " + editProject.Datum.ToShortDateString();
                 lblInfoExtraInfo.Text = "Extra Info:   " + editProject.ExtraInfo;
             };
 
             Button btnCancel = new Button();
             btnCancel.Text = "Cancel";
-            btnCancel.Location = new Point(200, 210);
+            btnCancel.Location = new Point(200, 260);
             btnCancel.BackColor = Color.FromArgb(200, 0, 0);
             btnCancel.FlatStyle = FlatStyle.Flat;
             btnCancel.FlatAppearance.BorderSize = 0;
@@ -645,6 +674,7 @@ namespace project_Bernard_Libert
             lblInfoNaam.Text = project.Naam;
             lblInfoKlant.Text = "Klant:   " + project.Klant;
             lblInfoAannemer.Text = "Aannemer:   " + project.Aannemer;
+            lblInfoDatum.Text = "Datum:   " + project.Datum.ToShortDateString();
             lblInfoExtraInfo.Text = "Extra Info:   " + project.ExtraInfo;
         }
         void editTextBoxAanpassen(Project editProject)
@@ -655,6 +685,7 @@ namespace project_Bernard_Libert
             textBoxAannemerEdit.Text = editProject.Aannemer;
             textBoxExtraInfoEdit.Text = editProject.ExtraInfo;
             textBoxKlantEdit.Text = editProject.Klant;
+            dtpDatumEdit.Value = editProject.Datum;
             textBoxWerfEdit.Text = editProject.Naam;
         }
         void ZoekProjecten(string zoekTekst)
@@ -729,5 +760,4 @@ namespace project_Bernard_Libert
         }
     }
     // meer indelingen
-    // datum toevoegen
 }

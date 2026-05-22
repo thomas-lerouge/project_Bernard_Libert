@@ -12,5 +12,7 @@ namespace project_Bernard_Libert
         public string Klant;
         public string Aannemer;
         public string ExtraInfo;
+        public DateTime Datum;
     }
 }
+

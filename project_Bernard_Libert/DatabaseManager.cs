@@ -33,7 +33,14 @@ namespace project_Bernard_Libert
                             project.Klant = reader.GetString("klant");
                             project.Aannemer = reader.GetString("aannemer");
                             project.ExtraInfo = reader.GetString("extra_info");
+                            try
+                            {
+                                project.Datum = reader.GetDateTime("datum");
+                            }
+                            catch
+                            {
 
+                            }
                             projecten.Add(project);
                         }
                     }
@@ -45,7 +52,7 @@ namespace project_Bernard_Libert
 
         public void AddProject(Project project)
         {
-            string query = "INSERT INTO Bernard_Libert(werf, klant, aannemer, extra_info) VALUES (@werf, @klant, @aannemer, @extra_info)";
+            string query = "INSERT INTO Bernard_Libert(werf, klant, aannemer, datum, extra_info) VALUES (@werf, @klant, @aannemer, @datum, @extra_info)";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -56,6 +63,7 @@ namespace project_Bernard_Libert
                     command.Parameters.AddWithValue("@werf", project.Naam);
                     command.Parameters.AddWithValue("@klant", project.Klant);
                     command.Parameters.AddWithValue("@aannemer", project.Aannemer);
+                    command.Parameters.AddWithValue("@datum", project.Datum);
                     command.Parameters.AddWithValue("@extra_info", project.ExtraInfo);
 
                     command.ExecuteNonQuery();
@@ -65,7 +73,7 @@ namespace project_Bernard_Libert
 
         public void EditProject(Project project, string oudeWerf)
         {
-            string query = "UPDATE Bernard_Libert SET werf = @werf, klant = @klant, aannemer = @aannemer, extra_info = @extra_info WHERE werf = @oudeWerf";
+            string query = "UPDATE Bernard_Libert SET werf = @werf, klant = @klant, aannemer = @aannemer, datum = @datum, extra_info = @extra_info WHERE werf = @oudeWerf";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -77,6 +85,7 @@ namespace project_Bernard_Libert
                     command.Parameters.AddWithValue("@werf", project.Naam);
                     command.Parameters.AddWithValue("@klant", project.Klant);
                     command.Parameters.AddWithValue("@aannemer", project.Aannemer);
+                    command.Parameters.AddWithValue("@datum", project.Datum);
                     command.Parameters.AddWithValue("@extra_info", project.ExtraInfo);
 
                     command.ExecuteNonQuery();
