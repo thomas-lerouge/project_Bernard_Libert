@@ -1,2 +1,9 @@
 18/05/2026 10:35:49 — Project bewerkt: clean house
 22/05/2026 11:34:54 — Project bewerkt: testwerfje
+22/05/2026 11:40:28 — Project toegevoegd: Nieuwbouw Villa De Smet – Gent
+22/05/2026 11:40:49 — Project verwijderd: de bouw
+22/05/2026 11:40:53 — Project verwijderd: clean house
+22/05/2026 11:40:55 — Project verwijderd: testwerfje
+22/05/2026 11:40:58 — Project verwijderd: Huis Lennard
+22/05/2026 11:41:02 — Project verwijderd: Huis Jesse
+22/05/2026 11:42:49 — Project toegevoegd: Kantooruitbreiding TechBuild NV
