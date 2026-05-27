@@ -43,7 +43,6 @@ namespace project_Bernard_Libert
         TextBox textBoxWerfEdit = new TextBox();
         TextBox textBoxKlantEdit = new TextBox();
         TextBox textBoxAannemerEdit = new TextBox();
-        DateTimePicker dtpDatumEdit = new DateTimePicker();
         TextBox textBoxExtraInfoEdit = new TextBox();
         TextBox textBoxAdresEdit = new TextBox();
         ComboBox comboTypeEdit = new ComboBox();
@@ -257,82 +256,156 @@ namespace project_Bernard_Libert
             PanelDetails.AutoScroll = true;
             Controls.Add(PanelDetails);
 
-            Label lblInfoTitel = new Label();
-            lblInfoTitel.Text = "Project Details";
-            lblInfoTitel.Location = new Point(10, 10);
-            lblInfoTitel.Size = new Size(320, 30);
-            lblInfoTitel.ForeColor = Color.White;
-            lblInfoTitel.Font = new Font(lblInfoTitel.Font.FontFamily, 15, FontStyle.Bold);
-            lblInfoTitel.TextAlign = ContentAlignment.MiddleCenter;
-            lblInfoTitel.BorderStyle = BorderStyle.FixedSingle;
-            PanelDetails.Controls.Add(lblInfoTitel);
+            PanelDetails.AutoScroll = true;
 
-            lblInfoNaam.Location = new Point(10, 50);
-            lblInfoNaam.MaximumSize = new Size(320, 0);
-            lblInfoNaam.AutoSize = true;
+            int xTitel = 10;
+            int xWaarde = 140;
+
+            Font titelFont = new Font("Segoe UI", 11, FontStyle.Bold);
+            Font waardeFont = new Font("Segoe UI", 11, FontStyle.Regular);
+
+            // Naam
+
+            lblInfoNaam.Location = new Point(0, 20);
+            lblInfoNaam.Size = new Size(360, 50);
             lblInfoNaam.ForeColor = Color.White;
-            lblInfoNaam.Font = new Font("Segoe UI", 11, FontStyle.Bold);
+            lblInfoNaam.Font = new Font("Segoe UI", 13, FontStyle.Bold);
+            lblInfoNaam.ForeColor = Color.LightBlue;
+            lblInfoNaam.TextAlign = ContentAlignment.MiddleCenter;
             PanelDetails.Controls.Add(lblInfoNaam);
 
-            lblInfoKlant.Location = new Point(10, 100);
-            lblInfoKlant.MaximumSize = new Size(320, 0);
-            lblInfoKlant.AutoSize = true;
+
+            // Klant
+            Label lblTitelKlant = new Label();
+            lblTitelKlant.Text = "Klant:";
+            lblTitelKlant.Location = new Point(xTitel, 100);
+            lblTitelKlant.Size = new Size(120, 30);
+            lblTitelKlant.ForeColor = Color.LightBlue;
+            lblTitelKlant.Font = titelFont;
+            PanelDetails.Controls.Add(lblTitelKlant);
+
+            lblInfoKlant.Location = new Point(xWaarde, 100);
+            lblInfoKlant.Size = new Size(200, 30);
             lblInfoKlant.ForeColor = Color.White;
-            lblInfoKlant.Font = new Font("Segoe UI", 11);
+            lblInfoKlant.Font = waardeFont;
             PanelDetails.Controls.Add(lblInfoKlant);
 
-            lblInfoAannemer.Location = new Point(10, 150);
-            lblInfoAannemer.MaximumSize = new Size(320, 0);
-            lblInfoAannemer.AutoSize = true;
+
+            // Aannemer
+            Label lblTitelAannemer = new Label();
+            lblTitelAannemer.Text = "Aannemer:";
+            lblTitelAannemer.Location = new Point(xTitel, 140);
+            lblTitelAannemer.Size = new Size(120, 30);
+            lblTitelAannemer.ForeColor = Color.LightBlue;
+            lblTitelAannemer.Font = titelFont;
+            PanelDetails.Controls.Add(lblTitelAannemer);
+
+            lblInfoAannemer.Location = new Point(xWaarde, 140);
+            lblInfoAannemer.Size = new Size(200, 30);
             lblInfoAannemer.ForeColor = Color.White;
-            lblInfoAannemer.Font = new Font("Segoe UI", 11);
+            lblInfoAannemer.Font = waardeFont;
             PanelDetails.Controls.Add(lblInfoAannemer);
 
-            lblInfoAdres.Location = new Point(10, 200);
-            lblInfoAdres.MaximumSize = new Size(320, 0);
-            lblInfoAdres.AutoSize = true;
+
+            // Adres
+            Label lblTitelAdres = new Label();
+            lblTitelAdres.Text = "Adres:";
+            lblTitelAdres.Location = new Point(xTitel, 180);
+            lblTitelAdres.Size = new Size(120, 30);
+            lblTitelAdres.ForeColor = Color.LightBlue;
+            lblTitelAdres.Font = titelFont;
+            PanelDetails.Controls.Add(lblTitelAdres);
+
+            lblInfoAdres.Location = new Point(xWaarde, 180);
+            lblInfoAdres.Size = new Size(200, 60);
             lblInfoAdres.ForeColor = Color.White;
-            lblInfoAdres.Font = new Font("Segoe UI", 11);
+            lblInfoAdres.Font = waardeFont;
+            lblInfoAdres.AutoSize = false;
             PanelDetails.Controls.Add(lblInfoAdres);
 
-            lblInfoType.Location = new Point(10, 250);
-            lblInfoType.MaximumSize = new Size(320, 0);
-            lblInfoType.AutoSize = true;
+
+            // Type
+            Label lblTitelType = new Label();
+            lblTitelType.Text = "Type:";
+            lblTitelType.Location = new Point(xTitel, 250);
+            lblTitelType.Size = new Size(120, 30);
+            lblTitelType.ForeColor = Color.LightBlue;
+            lblTitelType.Font = titelFont;
+            PanelDetails.Controls.Add(lblTitelType);
+
+            lblInfoType.Location = new Point(xWaarde, 250);
+            lblInfoType.Size = new Size(200, 30);
             lblInfoType.ForeColor = Color.White;
-            lblInfoType.Font = new Font("Segoe UI", 11);
+            lblInfoType.Font = waardeFont;
             PanelDetails.Controls.Add(lblInfoType);
 
-            lblInfoStart.Location = new Point(10, 300);
-            lblInfoStart.MaximumSize = new Size(320, 0);
-            lblInfoStart.AutoSize = true;
+
+            // Start
+            Label lblTitelStart = new Label();
+            lblTitelStart.Text = "Start:";
+            lblTitelStart.Location = new Point(xTitel, 290);
+            lblTitelStart.Size = new Size(120, 30);
+            lblTitelStart.ForeColor = Color.LightBlue;
+            lblTitelStart.Font = titelFont;
+            PanelDetails.Controls.Add(lblTitelStart);
+
+            lblInfoStart.Location = new Point(xWaarde, 290);
+            lblInfoStart.Size = new Size(200, 30);
             lblInfoStart.ForeColor = Color.White;
-            lblInfoStart.Font = new Font("Segoe UI", 11);
+            lblInfoStart.Font = waardeFont;
             PanelDetails.Controls.Add(lblInfoStart);
 
-            lblInfoVerwacht.Location = new Point(10, 350);
-            lblInfoVerwacht.MaximumSize = new Size(320, 0);
-            lblInfoVerwacht.AutoSize = true;
+
+            // Verwachte eind
+            Label lblTitelVerwacht = new Label();
+            lblTitelVerwacht.Text = "Verwacht:";
+            lblTitelVerwacht.Location = new Point(xTitel, 330);
+            lblTitelVerwacht.Size = new Size(120, 30);
+            lblTitelVerwacht.ForeColor = Color.LightBlue;
+            lblTitelVerwacht.Font = titelFont;
+            PanelDetails.Controls.Add(lblTitelVerwacht);
+
+            lblInfoVerwacht.Location = new Point(xWaarde, 330);
+            lblInfoVerwacht.Size = new Size(200, 30);
             lblInfoVerwacht.ForeColor = Color.White;
-            lblInfoVerwacht.Font = new Font("Segoe UI", 11);
+            lblInfoVerwacht.Font = waardeFont;
             PanelDetails.Controls.Add(lblInfoVerwacht);
 
-            lblInfoWerkelijk.Location = new Point(10, 400);
-            lblInfoWerkelijk.MaximumSize = new Size(320, 0);
-            lblInfoWerkelijk.AutoSize = true;
+
+            // Werkelijke eind
+            Label lblTitelWerkelijk = new Label();
+            lblTitelWerkelijk.Text = "Werkelijk:";
+            lblTitelWerkelijk.Location = new Point(xTitel, 370);
+            lblTitelWerkelijk.Size = new Size(120, 30);
+            lblTitelWerkelijk.ForeColor = Color.LightBlue;
+            lblTitelWerkelijk.Font = titelFont;
+            PanelDetails.Controls.Add(lblTitelWerkelijk);
+
+            lblInfoWerkelijk.Location = new Point(xWaarde, 370);
+            lblInfoWerkelijk.Size = new Size(200, 30);
             lblInfoWerkelijk.ForeColor = Color.White;
-            lblInfoWerkelijk.Font = new Font("Segoe UI", 11);
+            lblInfoWerkelijk.Font = waardeFont;
             PanelDetails.Controls.Add(lblInfoWerkelijk);
 
-            lblInfoExtraInfo.Location = new Point(10, 450);
-            lblInfoExtraInfo.MaximumSize = new Size(320, 150);
-            lblInfoExtraInfo.AutoSize = true;
+
+            // Extra info
+            Label lblTitelExtra = new Label();
+            lblTitelExtra.Text = "Opmerking:";
+            lblTitelExtra.Location = new Point(xTitel, 420);
+            lblTitelExtra.Size = new Size(120, 30);
+            lblTitelExtra.ForeColor = Color.LightBlue;
+            lblTitelExtra.Font = titelFont;
+            PanelDetails.Controls.Add(lblTitelExtra);
+
+            lblInfoExtraInfo.Location = new Point(xWaarde, 420);
+            lblInfoExtraInfo.Size = new Size(200, 100);
             lblInfoExtraInfo.ForeColor = Color.White;
-            lblInfoExtraInfo.Font = new Font("Segoe UI", 11);
+            lblInfoExtraInfo.Font = waardeFont;
             PanelDetails.Controls.Add(lblInfoExtraInfo);
 
             Button btnEdit = new Button();
             btnEdit.Text = "🖉 Edit";
-            btnEdit.Location = new Point(10, 580);
+            btnEdit.Location = new Point(20, 550);
             btnEdit.Size = new Size(80, 30);
             btnEdit.BackColor = Color.FromArgb(0, 122, 204);
             btnEdit.FlatStyle = FlatStyle.Flat;
@@ -342,10 +415,7 @@ namespace project_Bernard_Libert
 
             btnEdit.Click += (sender, e) =>
             {
-                if (lblInfoNaam.Text != "Naam: ")
-                {
-
-                    Project editProject = new Project();
+                Project editProject = new Project();
 
                     foreach (Project project in alleProjecten)
                     {
@@ -355,13 +425,11 @@ namespace project_Bernard_Libert
                             editTextBoxAanpassen(editProject);
                         }
                     }
-
-                }
             };
 
             Button btnDelete = new Button();
             btnDelete.Text = "🗑️ Delete";
-            btnDelete.Location = new Point(100, 580);
+            btnDelete.Location = new Point(150, 550);
             btnDelete.Size = new Size(80, 30);
             btnDelete.BackColor = Color.FromArgb(200, 0, 0);
             btnDelete.FlatStyle = FlatStyle.Flat;
@@ -371,8 +439,6 @@ namespace project_Bernard_Libert
 
             btnDelete.Click += (sender, e) =>
             {
-                if (lblInfoNaam.Text != "Naam: ")
-                {
                     DialogResult result = MessageBox.Show(
                         "Weet je zeker dat je \"" + lblInfoNaam.Text + "\" wil verwijderen?",
                         "Project verwijderen",
@@ -386,12 +452,18 @@ namespace project_Bernard_Libert
                         db.DeleteProject(werf);
                         LogToevoegen("Project verwijderd: " + werf);
                         loadProjecten();
-                        lblInfoNaam.Text = "Naam: ";
-                        lblInfoKlant.Text = "Klant: ";
-                        lblInfoAannemer.Text = "Aannemer: ";
-                        lblInfoExtraInfo.Text = "Extra Info: ";
+                        lblInfoNaam.Text = "";
+                        lblInfoKlant.Text = "";
+                        lblInfoAannemer.Text = "";
+                        lblInfoExtraInfo.Text = "";
+                        lblInfoAdres.Text = "";
+                        lblInfoType.Text = "";
+                        lblInfoStart.Text = "";
+                        lblInfoVerwacht.Text = "";
+                        lblInfoWerkelijk.Text = "";
+
                     }
-                }
+
             };
 
         }
@@ -785,7 +857,6 @@ namespace project_Bernard_Libert
                 editProject.Naam = textBoxWerfEdit.Text;
                 editProject.Klant = textBoxKlantEdit.Text;
                 editProject.Aannemer = textBoxAannemerEdit.Text;
-                editProject.Datum = dtpDatumEdit.Value;
                 editProject.Adres = textBoxAdresEdit.Text;
                 editProject.TypeProject = comboTypeEdit.Text;
                 editProject.StartDatum = dtpStartEdit.Value;
@@ -810,15 +881,15 @@ namespace project_Bernard_Libert
 
                 loadProjecten();
 
-                lblInfoNaam.Text = "Naam: " + editProject.Naam;
-                lblInfoKlant.Text = "Klant: " + editProject.Klant;
-                lblInfoAannemer.Text = "Aannemer: " + editProject.Aannemer;
-                lblInfoAdres.Text = "Adres: " + editProject.Adres;
-                lblInfoType.Text = "Type: " + editProject.TypeProject;
-                lblInfoStart.Text = "Startdatum: " + editProject.StartDatum.ToShortDateString();
-                lblInfoVerwacht.Text = "Verwachte einddatum: " + editProject.VerwachteEindDatum.ToShortDateString();
-                lblInfoWerkelijk.Text = "Werkelijke einddatum: " + editProject.WerkelijkeEindDatum.ToShortDateString();
-                lblInfoExtraInfo.Text = "Extra info: " + editProject.ExtraInfo;
+                lblInfoNaam.Text = editProject.Naam;
+                lblInfoKlant.Text = editProject.Klant;
+                lblInfoAannemer.Text = editProject.Aannemer;
+                lblInfoAdres.Text = editProject.Adres;
+                lblInfoType.Text = editProject.TypeProject;
+                lblInfoStart.Text = editProject.StartDatum.ToShortDateString();
+                lblInfoVerwacht.Text = editProject.VerwachteEindDatum.ToShortDateString();
+                lblInfoWerkelijk.Text = editProject.WerkelijkeEindDatum.ToShortDateString();
+                lblInfoExtraInfo.Text = editProject.ExtraInfo;
             };
 
 
@@ -858,15 +929,15 @@ namespace project_Bernard_Libert
 
         void loadDetails(Project project)
         {
-            lblInfoNaam.Text = "Naam: " + project.Naam;
-            lblInfoKlant.Text = "Klant: " + project.Klant;
-            lblInfoAannemer.Text = "Aannemer: " + project.Aannemer;
-            lblInfoAdres.Text = "Adres: " + project.Adres;
-            lblInfoType.Text = "Type: " + project.TypeProject;
-            lblInfoStart.Text = "Startdatum: " + project.StartDatum.ToShortDateString();
-            lblInfoVerwacht.Text = "Verwachte einddatum: " + project.VerwachteEindDatum.ToShortDateString();
-            lblInfoWerkelijk.Text = "Werkelijke einddatum: " + project.WerkelijkeEindDatum.ToShortDateString();
-            lblInfoExtraInfo.Text = "Extra info: " + project.ExtraInfo;
+            lblInfoNaam.Text = project.Naam;
+            lblInfoKlant.Text = project.Klant;
+            lblInfoAannemer.Text = project.Aannemer;
+            lblInfoAdres.Text = project.Adres;
+            lblInfoType.Text = project.TypeProject;
+            lblInfoStart.Text = project.StartDatum.ToShortDateString();
+            lblInfoVerwacht.Text = project.VerwachteEindDatum.ToShortDateString();
+            lblInfoWerkelijk.Text = project.WerkelijkeEindDatum.ToShortDateString();
+            lblInfoExtraInfo.Text = project.ExtraInfo;
         }
         void editTextBoxAanpassen(Project editProject)
         {
