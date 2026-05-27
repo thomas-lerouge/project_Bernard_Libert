@@ -13,6 +13,11 @@ namespace project_Bernard_Libert
         public string Aannemer;
         public string ExtraInfo;
         public DateTime Datum;
+        public string Adres;
+        public string TypeProject;
+        public DateTime StartDatum;
+        public DateTime VerwachteEindDatum;
+        public DateTime WerkelijkeEindDatum;
     }
 }
 
