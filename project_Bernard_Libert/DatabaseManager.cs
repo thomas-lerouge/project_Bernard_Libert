@@ -28,6 +28,8 @@ namespace project_Bernard_Libert
                     {
                         Project project = new Project();
 
+                        project.id = reader.GetInt32("id");
+
                         project.Naam = reader.GetString("werf");
                         project.Klant = reader.GetString("klant");
                         project.Aannemer = reader.GetString("aannemer");
@@ -49,7 +51,7 @@ namespace project_Bernard_Libert
             return projecten;
         }
 
-        public void AddProject(Project project)
+        public int AddProject(Project project)
         {
             string query =
             @"INSERT INTO Bernard_Libert
@@ -59,7 +61,7 @@ namespace project_Bernard_Libert
 
             VALUES
             (@werf,@klant,@aannemer,@adres,@typeProject,
-            @start,@verwacht,@werkelijk,@extra)";
+            @start,@verwacht,@werkelijk,@extra); SELECT LAST_INSERT_ID();";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -79,7 +81,8 @@ namespace project_Bernard_Libert
 
                 command.Parameters.AddWithValue("@extra", project.ExtraInfo);
 
-                command.ExecuteNonQuery();
+                return Convert.ToInt32(command.ExecuteScalar());
+
             }
         }
 
@@ -137,6 +140,140 @@ namespace project_Bernard_Libert
 
                 command.ExecuteNonQuery();
             }
+        }
+        public List<Werknemer> GetWerknemers()
+        {
+            List<Werknemer> werknemers = new List<Werknemer>();
+
+            string query = "SELECT * FROM werknemers";
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Werknemer werknemer = new Werknemer();
+
+                            werknemer.Id = reader.GetInt32("id");
+                            werknemer.Naam = reader.GetString("naam");
+                            werknemer.Functie = reader.GetString("functie");
+
+                            werknemers.Add(werknemer);
+                        }
+                    }
+                }
+            }
+
+            return werknemers;
+        }
+        public void AddWerknemer(Werknemer werknemer)
+        {
+            string query =
+                "INSERT INTO werknemers(naam, functie) VALUES (@naam, @functie)";
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    connection.Open();
+
+                    command.Parameters.AddWithValue("@naam", werknemer.Naam);
+                    command.Parameters.AddWithValue("@functie", werknemer.Functie);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+        public void EditWerknemer(Werknemer werknemer)
+        {
+            string query =
+                "UPDATE werknemers SET naam = @naam, functie = @functie WHERE id = @id";
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    connection.Open();
+
+                    command.Parameters.AddWithValue("@id", werknemer.Id);
+                    command.Parameters.AddWithValue("@naam", werknemer.Naam);
+                    command.Parameters.AddWithValue("@functie", werknemer.Functie);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+        public void DeleteWerknemer(int id)
+        {
+            string query = "DELETE FROM werknemers WHERE id = @id";
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    connection.Open();
+
+                    command.Parameters.AddWithValue("@id", id);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+        public void VoegWerknemerToeAanProject(int projectId, int werknemerId)
+        {
+            string query =
+                "INSERT INTO project_werknemers " +
+                "(project_id, werknemer_id) " +
+                "VALUES (@projectId, @werknemerId)";
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    connection.Open();
+
+                    command.Parameters.AddWithValue("@projectId", projectId);
+                    command.Parameters.AddWithValue("@werknemerId", werknemerId);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+        public List<Werknemer> GetWerknemersVanProject(int projectId)
+        {
+            List<Werknemer> werknemers = new List<Werknemer>();
+
+            string query =
+                @"SELECT werknemers.id, werknemers.naam, werknemers.functie
+                FROM werknemers
+                INNER JOIN project_werknemers ON werknemers.id = project_werknemers.werknemer_id
+                WHERE project_werknemers.project_id = @projectId";
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                connection.Open();
+                command.Parameters.AddWithValue("@projectId", projectId);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Werknemer werknemer = new Werknemer();
+                        werknemer.Id = reader.GetInt32("id");
+                        werknemer.Naam = reader.GetString("naam");
+                        werknemer.Functie = reader.GetString("functie");
+                        werknemers.Add(werknemer);
+                    }
+                }
+            }
+
+            return werknemers;
         }
     }
 }

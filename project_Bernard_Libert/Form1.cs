@@ -1,14 +1,15 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using Mysqlx.Crud;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
-using System.IO;
 
 namespace project_Bernard_Libert
 {
@@ -25,10 +26,13 @@ namespace project_Bernard_Libert
         Panel panelAddRow = new Panel();
         Panel panelEditRow = new Panel();
         Panel panelLog = new Panel();
+        Panel panelWerknemers = new Panel();
+
 
         bool oplopend = true;
 
         List<Project> alleProjecten = new List<Project>();
+        List<Werknemer> alleWerknemers = new List<Werknemer>();
 
         Label lblInfoNaam = new Label();
         Label lblInfoKlant = new Label();
@@ -52,6 +56,15 @@ namespace project_Bernard_Libert
 
         List<Label> menuLabels = new List<Label>();
 
+        TextBox textBoxNaamWerknemer = new TextBox();
+        TextBox textBoxFunctieWerknemer = new TextBox();
+
+        Panel panelAddWerknemer = new Panel();
+
+        CheckedListBox checkedWerknemers = new CheckedListBox();
+
+        Panel panelDetailsWerknemers = new Panel();
+
         public Form1()
         {
             InitializeComponent();
@@ -69,6 +82,12 @@ namespace project_Bernard_Libert
 
             loadLogPanel();
             panelLog.Visible = false;
+
+            loadWerknemersPanel();
+            panelWerknemers.Visible = false;
+
+            loadAddWerknemerPanel();
+            panelAddWerknemer.Visible = false;
 
             LaadLogBestand();
 
@@ -98,6 +117,15 @@ namespace project_Bernard_Libert
 
             buttonAddProject.Click += (sender, e) =>
             {
+                checkedWerknemers.Items.Clear();
+
+                alleWerknemers = db.GetWerknemers();
+
+                foreach (Werknemer werknemer in alleWerknemers)
+                {
+                    checkedWerknemers.Items.Add(werknemer.Naam);
+                }
+
                 panelAddRow.Visible = true;
                 panelHome.Visible = false;
             };
@@ -197,6 +225,7 @@ namespace project_Bernard_Libert
             {
                 GeselecteerdMenu(lblLog);
                 panelHome.Visible = false;
+                panelWerknemers.Visible = false;
                 panelLog.Visible = true;
                 loadLog();
             };
@@ -303,6 +332,30 @@ namespace project_Bernard_Libert
                 ToonProjecten(kantoorProjecten);
             };
 
+            Label lblWerknemers = new Label();
+            lblWerknemers.BackColor = Color.FromArgb(21, 25, 50);
+            lblWerknemers.Location = new Point(0, 350);
+            lblWerknemers.Size = new Size(menuPanel.Width, 50);
+            lblWerknemers.ForeColor = Color.White;
+            lblWerknemers.Text = "Werknemers";
+            lblWerknemers.BorderStyle = BorderStyle.FixedSingle;
+            lblWerknemers.TextAlign = ContentAlignment.MiddleCenter;
+            lblWerknemers.Font = new Font(lblWerknemers.Font.FontFamily, 15, FontStyle.Regular);
+            menuPanel.Controls.Add(lblWerknemers);
+
+            menuLabels.Add(lblWerknemers);
+
+            lblWerknemers.Click += (sender, e) =>
+            {
+                GeselecteerdMenu(lblWerknemers);
+                panelLog.Visible = false;
+                panelHome.Visible = false;
+                panelWerknemers.Visible = true;
+
+                alleWerknemers = db.GetWerknemers();
+                ToonWerknemers(alleWerknemers);
+
+            };
         }
         void loadMain()
         {
@@ -358,11 +411,20 @@ namespace project_Bernard_Libert
         void loadDetailsPanel()
         {
             PanelDetails.Location = new Point(840, 80);
-            PanelDetails.Size = new Size(360, 720);
+            PanelDetails.Size = new Size(360, 660);
             PanelDetails.BackColor = Color.FromArgb(18, 23, 29);
             PanelDetails.BorderStyle = BorderStyle.FixedSingle;
             PanelDetails.AutoScroll = true;
             Controls.Add(PanelDetails);
+
+            Controls.Add(PanelDetails);
+
+            Panel panelDetailKnoppen = new Panel();
+            panelDetailKnoppen.Location = new Point(840, 740);
+            panelDetailKnoppen.Size = new Size(360, 60);
+            panelDetailKnoppen.BackColor = Color.FromArgb(18, 23, 29);
+            panelDetailKnoppen.BorderStyle = BorderStyle.FixedSingle;
+            Controls.Add(panelDetailKnoppen);
 
             PanelDetails.AutoScroll = true;
 
@@ -375,7 +437,7 @@ namespace project_Bernard_Libert
             // Naam
 
             lblInfoNaam.Location = new Point(0, 20);
-            lblInfoNaam.Size = new Size(360, 50);
+            lblInfoNaam.Size = new Size(340, 50);
             lblInfoNaam.ForeColor = Color.White;
             lblInfoNaam.Font = new Font("Segoe UI", 13, FontStyle.Bold);
             lblInfoNaam.ForeColor = Color.LightBlue;
@@ -511,15 +573,29 @@ namespace project_Bernard_Libert
             lblInfoExtraInfo.Font = waardeFont;
             PanelDetails.Controls.Add(lblInfoExtraInfo);
 
+            Label lblTitelWerknemersDetail = new Label();
+            lblTitelWerknemersDetail.Text = "Werknemers:";
+            lblTitelWerknemersDetail.Location = new Point(xTitel, 540);
+            lblTitelWerknemersDetail.Size = new Size(120, 30);
+            lblTitelWerknemersDetail.ForeColor = Color.LightBlue;
+            lblTitelWerknemersDetail.Font = titelFont;
+            PanelDetails.Controls.Add(lblTitelWerknemersDetail);
+
+            panelDetailsWerknemers.Location = new Point(xTitel, 575);
+            panelDetailsWerknemers.Size = new Size(330, 200);
+            panelDetailsWerknemers.BackColor = Color.FromArgb(18, 23, 29);
+            PanelDetails.Controls.Add(panelDetailsWerknemers);
+
+
             Button btnEdit = new Button();
             btnEdit.Text = "🖉 Edit";
-            btnEdit.Location = new Point(20, 550);
+            btnEdit.Location = new Point(20, 15);
             btnEdit.Size = new Size(80, 30);
             btnEdit.BackColor = Color.FromArgb(0, 122, 204);
             btnEdit.FlatStyle = FlatStyle.Flat;
             btnEdit.FlatAppearance.BorderSize = 0;
             btnEdit.ForeColor = Color.White;
-            PanelDetails.Controls.Add(btnEdit);
+            panelDetailKnoppen.Controls.Add(btnEdit);
 
             btnEdit.Click += (sender, e) =>
             {
@@ -537,13 +613,13 @@ namespace project_Bernard_Libert
 
             Button btnDelete = new Button();
             btnDelete.Text = "🗑️ Delete";
-            btnDelete.Location = new Point(150, 550);
+            btnDelete.Location = new Point(130, 15);
             btnDelete.Size = new Size(80, 30);
             btnDelete.BackColor = Color.FromArgb(200, 0, 0);
             btnDelete.FlatStyle = FlatStyle.Flat;
             btnDelete.FlatAppearance.BorderSize = 0;
             btnDelete.ForeColor = Color.White;
-            PanelDetails.Controls.Add(btnDelete);
+            panelDetailKnoppen.Controls.Add(btnDelete);
 
             btnDelete.Click += (sender, e) =>
             {
@@ -573,6 +649,8 @@ namespace project_Bernard_Libert
                     }
 
             };
+
+
 
         }
         void loadProjecten()
@@ -753,6 +831,22 @@ namespace project_Bernard_Libert
             textBoxExtraInfo.Multiline = true;
             panelAddRow.Controls.Add(textBoxExtraInfo);
 
+            Label lblWerknemers = new Label();
+
+            lblWerknemers.Text = "Werknemers:";
+            lblWerknemers.Location = new Point(380, 10);
+            lblWerknemers.Size = new Size(120, 30);
+
+            panelAddRow.Controls.Add(lblWerknemers);
+
+            checkedWerknemers.Location = new Point(380, 50);
+            checkedWerknemers.Size = new Size(200, 200);
+
+            checkedWerknemers.BackColor = Color.FromArgb(40, 40, 50);
+            checkedWerknemers.ForeColor = Color.White;
+
+            panelAddRow.Controls.Add(checkedWerknemers);
+
 
             Button btnAdd = new Button();
             btnAdd.Text = "Add";
@@ -789,7 +883,16 @@ namespace project_Bernard_Libert
 
                 if (!bestaatAl)
                 {
-                    db.AddProject(nieuwProject);
+                    int nieuwId = db.AddProject(nieuwProject);
+
+                    for (int j = 0; j < checkedWerknemers.Items.Count; j++)
+                    {
+                        if (checkedWerknemers.GetItemChecked(j))
+                        {
+                            db.VoegWerknemerToeAanProject(nieuwId, alleWerknemers[j].Id);
+                        }
+                    }
+
                     LogToevoegen("Project toegevoegd: " + nieuwProject.Naam);
                 }
                 else
@@ -801,6 +904,12 @@ namespace project_Bernard_Libert
                 textBoxExtraInfo.Text = "";
                 textBoxKlant.Text = "";
                 textBoxWerf.Text = "";
+                textBoxAdres.Text = "";
+                comboType.Text = "";
+
+                dtpStart.Value = DateTime.Today;
+                dtpVerwacht.Value = DateTime.Today;
+                dtpWerkelijk.Value = DateTime.Today;
 
 
                 panelAddRow.Visible = false;
@@ -1034,6 +1143,15 @@ namespace project_Bernard_Libert
 
             Controls.Add(panelLog);
         }
+        void loadWerknemersPanel()
+        {
+            panelWerknemers.Location = panelHome.Location;
+            panelWerknemers.Size = panelHome.Size;
+            panelWerknemers.BackColor = Color.FromArgb(18, 23, 29);
+            panelWerknemers.BorderStyle = BorderStyle.FixedSingle;
+            panelWerknemers.AutoScroll = true;
+            Controls.Add(panelWerknemers);
+        }
 
         void loadDetails(Project project)
         {
@@ -1046,6 +1164,21 @@ namespace project_Bernard_Libert
             lblInfoVerwacht.Text = project.VerwachteEindDatum.ToShortDateString();
             lblInfoWerkelijk.Text = project.WerkelijkeEindDatum.ToShortDateString();
             lblInfoExtraInfo.Text = project.ExtraInfo;
+
+            panelDetailsWerknemers.Controls.Clear();
+
+            List<Werknemer> werknemers = db.GetWerknemersVanProject(project.id);
+
+            for (int i = 0; i < werknemers.Count; i++)
+            {
+                Label lblW = new Label();
+                lblW.Text = "• " + werknemers[i].Naam + " ~ " + werknemers[i].Functie;
+                lblW.Location = new Point(0, i * 28);
+                lblW.Size = new Size(330, 25);
+                lblW.ForeColor = Color.White;
+                lblW.Font = new Font("Segoe UI", 10, FontStyle.Regular);
+                panelDetailsWerknemers.Controls.Add(lblW);
+            }
         }
         void editTextBoxAanpassen(Project editProject)
         {
@@ -1137,6 +1270,9 @@ namespace project_Bernard_Libert
         void GeselecteerdMenu(Label geselecteerdLabel)
         {
             panelLog.Visible = false;
+            panelWerknemers.Visible = false;
+            panelHome.Visible = true;
+
             panelHome.Visible = true;
             foreach (Label label in menuLabels) 
             {
@@ -1144,8 +1280,151 @@ namespace project_Bernard_Libert
             }
             geselecteerdLabel.BackColor = Color.FromArgb(0, 120, 200);
         }
+        void ToonWerknemers(List<Werknemer> werknemers)
+        {
+            panelWerknemers.Controls.Clear();
+
+            Button btnNieuweWerknemer = new Button();
+
+            btnNieuweWerknemer.Text = "✚ Nieuwe werknemer";
+            btnNieuweWerknemer.Location = new Point(20, 20);
+            btnNieuweWerknemer.Size = new Size(180, 40);
+
+            btnNieuweWerknemer.BackColor = Color.FromArgb(0, 122, 204);
+            btnNieuweWerknemer.FlatStyle = FlatStyle.Flat;
+            btnNieuweWerknemer.FlatAppearance.BorderSize = 0;
+            btnNieuweWerknemer.ForeColor = Color.White;
+
+            panelWerknemers.Controls.Add(btnNieuweWerknemer);
+
+            btnNieuweWerknemer.Click += (sender, e) =>
+            {
+                panelWerknemers.Visible = false;
+                panelAddWerknemer.Visible = true;
+            };
+
+            for (int i = 0; i < werknemers.Count; i++)
+            {
+                Werknemer werknemer = werknemers[i];
+
+                Panel panelRij = new Panel();
+                panelRij.Location = new Point(10, 100 + (i * 45));
+                panelRij.Size = new Size(600, 40);
+                panelRij.BackColor = Color.FromArgb(40, 40, 50);
+                panelRij.BorderStyle = BorderStyle.FixedSingle;
+
+                panelWerknemers.Controls.Add(panelRij);
+
+                Label lblNaam = new Label();
+                lblNaam.Text = werknemer.Naam + " ~ " + werknemer.Functie;
+                lblNaam.Location = new Point(10, 5);
+                lblNaam.Size = panelRij.Size;
+                lblNaam.ForeColor = Color.White;
+                lblNaam.Font = new Font("Segoe UI", 11);
+                lblNaam.TextAlign = ContentAlignment.MiddleCenter;
+
+                Button btnDeleteWerknemer = new Button();
+
+                btnDeleteWerknemer.Text = "🗑";
+                btnDeleteWerknemer.Size = new Size(40, 30);
+                btnDeleteWerknemer.Location = new Point(540, 5);
+
+                btnDeleteWerknemer.BackColor = Color.FromArgb(200, 0, 0);
+                btnDeleteWerknemer.ForeColor = Color.White;
+
+                btnDeleteWerknemer.FlatStyle = FlatStyle.Flat;
+                btnDeleteWerknemer.FlatAppearance.BorderSize = 0;
+
+                panelRij.Controls.Add(btnDeleteWerknemer);
+
+                btnDeleteWerknemer.Click += (sender, e) =>
+                {
+                    DialogResult result = MessageBox.Show(
+                        "Werknemer verwijderen?",
+                        "Verwijderen",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning
+                    );
+
+                    if (result == DialogResult.Yes)
+                    {
+                        db.DeleteWerknemer(werknemer.Id);
+
+                        LogToevoegen("Werknemer verwijderd: " + werknemer.Naam);
+
+                        alleWerknemers = db.GetWerknemers();
+
+                        ToonWerknemers(alleWerknemers);
+                    }
+                };
+
+                panelRij.Controls.Add(lblNaam);
+            }
+        }
+        void loadAddWerknemerPanel()
+        {
+            panelAddWerknemer.Location = panelHome.Location;
+            panelAddWerknemer.Size = panelHome.Size;
+            panelAddWerknemer.BackColor = Color.FromArgb(18, 23, 29);
+
+            Controls.Add(panelAddWerknemer);
+
+            Label lblNaam = new Label();
+            lblNaam.Text = "Naam:";
+            lblNaam.Location = new Point(20, 30);
+            lblNaam.Size = new Size(100, 30);
+            lblNaam.ForeColor = Color.White;
+            panelAddWerknemer.Controls.Add(lblNaam);
+
+            textBoxNaamWerknemer.Location = new Point(130, 30);
+            textBoxNaamWerknemer.Size = new Size(250, 30);
+            panelAddWerknemer.Controls.Add(textBoxNaamWerknemer);
+
+            Label lblFunctie = new Label();
+            lblFunctie.Text = "Functie:";
+            lblFunctie.Location = new Point(20, 80);
+            lblFunctie.Size = new Size(100, 30);
+            lblFunctie.ForeColor = Color.White;
+            panelAddWerknemer.Controls.Add(lblFunctie);
+
+            textBoxFunctieWerknemer.Location = new Point(130, 80);
+            textBoxFunctieWerknemer.Size = new Size(250, 30);
+            panelAddWerknemer.Controls.Add(textBoxFunctieWerknemer);
+
+            Button btnAdd = new Button();
+            btnAdd.Text = "Toevoegen";
+            btnAdd.Location = new Point(130, 150);
+            btnAdd.Size = new Size(120, 40);
+            btnAdd.BackColor = Color.FromArgb(0, 122, 204);
+            btnAdd.FlatStyle = FlatStyle.Flat;
+            btnAdd.FlatAppearance.BorderSize = 0;
+            btnAdd.ForeColor = Color.White;
+
+            panelAddWerknemer.Controls.Add(btnAdd);
+
+            btnAdd.Click += (sender, e) =>
+            {
+                Werknemer werknemer = new Werknemer();
+
+                werknemer.Naam = textBoxNaamWerknemer.Text;
+                werknemer.Functie = textBoxFunctieWerknemer.Text;
+
+                db.AddWerknemer(werknemer);
+
+                alleWerknemers = db.GetWerknemers();
+                ToonWerknemers(alleWerknemers);
+
+                textBoxNaamWerknemer.Text = "";
+                textBoxFunctieWerknemer.Text = "";
+
+                panelAddWerknemer.Visible = false;
+                panelWerknemers.Visible = true;
+
+                LogToevoegen("Werknemer toegevoegd: " + werknemer.Naam);
+            };
+        }
+
     }
-    // meer indelingen
     //  achternaam-voornaam-Eindproject (zip)
     //  * Project
     //  * DevBlog (link + pdf)

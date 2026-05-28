@@ -8,6 +8,7 @@ namespace project_Bernard_Libert
 {
     public class Project
     {
+        public int id;
         public string Naam;
         public string Klant;
         public string Aannemer;
