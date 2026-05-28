@@ -50,11 +50,12 @@ namespace project_Bernard_Libert
         DateTimePicker dtpVerwachtEdit = new DateTimePicker();
         DateTimePicker dtpWerkelijkEdit = new DateTimePicker();
 
+        List<Label> menuLabels = new List<Label>();
 
         public Form1()
         {
             InitializeComponent();
-            this.Size = new Size(1200, 800);
+            this.Size = new Size(1200, 835);
 
             loadMain();
             loadMenuPanel();
@@ -159,7 +160,7 @@ namespace project_Bernard_Libert
             Controls.Add(menuPanel);
 
             Label lblAllProjects = new Label();
-            lblAllProjects.BackColor = Color.FromArgb(21, 25, 50);
+            lblAllProjects.BackColor = Color.FromArgb(0, 120, 200);
             lblAllProjects.Location = new Point(0, 0);
             lblAllProjects.Size = new Size(menuPanel.Width, 50);
             lblAllProjects.ForeColor = Color.White;
@@ -169,8 +170,11 @@ namespace project_Bernard_Libert
             lblAllProjects.Font = new Font(lblAllProjects.Font.FontFamily, 15, FontStyle.Regular);
             menuPanel.Controls.Add(lblAllProjects);
 
+            menuLabels.Add(lblAllProjects);
+
             lblAllProjects.Click += (sender, e) =>
             {
+                GeselecteerdMenu(lblAllProjects);
                 panelHome.Visible = true;
                 panelLog.Visible = false;
                 panelEditRow.Visible = false;
@@ -180,7 +184,7 @@ namespace project_Bernard_Libert
 
             Label lblLog = new Label();
             lblLog.BackColor = Color.FromArgb(21, 25, 50);
-            lblLog.Location = new Point(0, 50);
+            lblLog.Location = new Point(0, menuPanel.Height - 55);
             lblLog.Size = new Size(menuPanel.Width, 50);
             lblLog.ForeColor = Color.White;
             lblLog.Text = "Log";
@@ -191,10 +195,114 @@ namespace project_Bernard_Libert
 
             lblLog.Click += (sender, e) =>
             {
+                GeselecteerdMenu(lblLog);
                 panelHome.Visible = false;
                 panelLog.Visible = true;
                 loadLog();
             };
+
+            menuLabels.Add(lblLog);
+
+            Label lblNieuwbouw = new Label();
+            lblNieuwbouw.BackColor = Color.FromArgb(21, 25, 50);
+            lblNieuwbouw.Location = new Point(0, 50);
+            lblNieuwbouw.Size = new Size(menuPanel.Width, 50);
+            lblNieuwbouw.ForeColor = Color.White;
+            lblNieuwbouw.Text = "Nieuwbouw";
+            lblNieuwbouw.BorderStyle = BorderStyle.FixedSingle;
+            lblNieuwbouw.TextAlign = ContentAlignment.MiddleCenter;
+            lblNieuwbouw.Font = new Font(lblNieuwbouw.Font.FontFamily, 15, FontStyle.Regular);
+            menuPanel.Controls.Add(lblNieuwbouw);
+
+            lblNieuwbouw.Click += (sender, e) =>
+            {
+                GeselecteerdMenu(lblNieuwbouw);
+                List<Project> nieuwbouwProjecten = alleProjecten.Where(p => p.TypeProject == "Nieuwbouw").ToList();
+                ToonProjecten(nieuwbouwProjecten);
+            };
+
+            menuLabels.Add(lblNieuwbouw);
+
+            Label lblRenovatie = new Label();
+            lblRenovatie.BackColor = Color.FromArgb(21, 25, 50);
+            lblRenovatie.Location = new Point(0, 100);
+            lblRenovatie.Size = new Size(menuPanel.Width, 50);
+            lblRenovatie.ForeColor = Color.White;
+            lblRenovatie.Text = "Renovatie";
+            lblRenovatie.BorderStyle = BorderStyle.FixedSingle;
+            lblRenovatie.TextAlign = ContentAlignment.MiddleCenter;
+            lblRenovatie.Font = new Font(lblRenovatie.Font.FontFamily, 15, FontStyle.Regular);
+            menuPanel.Controls.Add(lblRenovatie);
+
+            lblRenovatie.Click += (sender, e) =>
+            {
+                GeselecteerdMenu(lblRenovatie);
+                List<Project> renovatieProjecten = alleProjecten.Where(p => p.TypeProject == "Renovatie").ToList();
+                ToonProjecten(renovatieProjecten);
+            };
+
+            menuLabels.Add(lblRenovatie);
+
+            Label lblUitbreiding = new Label();
+            lblUitbreiding.BackColor = Color.FromArgb(21, 25, 50);
+            lblUitbreiding.Location = new Point(0, 150);
+            lblUitbreiding.Size = new Size(menuPanel.Width, 50);
+            lblUitbreiding.ForeColor = Color.White;
+            lblUitbreiding.Text = "Uitbreiding";
+            lblUitbreiding.BorderStyle = BorderStyle.FixedSingle;
+            lblUitbreiding.TextAlign = ContentAlignment.MiddleCenter;
+            lblUitbreiding.Font = new Font(lblUitbreiding.Font.FontFamily, 15, FontStyle.Regular);
+            menuPanel.Controls.Add(lblUitbreiding);
+
+            lblUitbreiding.Click += (sender, e) =>
+            {
+                GeselecteerdMenu(lblUitbreiding);
+                List<Project> uitbreidingProjecten = alleProjecten.Where(p => p.TypeProject == "Uitbreiding").ToList();
+                ToonProjecten(uitbreidingProjecten);
+            };
+
+            menuLabels.Add(lblUitbreiding);
+
+            Label lblAppartement = new Label();
+            lblAppartement.BackColor = Color.FromArgb(21, 25, 50);
+            lblAppartement.Location = new Point(0, 200);
+            lblAppartement.Size = new Size(menuPanel.Width, 50);
+            lblAppartement.ForeColor = Color.White;
+            lblAppartement.Text = "Appartement";
+            lblAppartement.BorderStyle = BorderStyle.FixedSingle;
+            lblAppartement.TextAlign = ContentAlignment.MiddleCenter;
+            lblAppartement.Font = new Font(lblAppartement.Font.FontFamily, 15, FontStyle.Regular);
+            menuPanel.Controls.Add(lblAppartement);
+
+            menuLabels.Add(lblAppartement);
+
+            lblAppartement.Click += (sender, e) =>
+            {
+                GeselecteerdMenu(lblAppartement);
+                List<Project> appartementProjecten = alleProjecten.Where(p => p.TypeProject == "Appartement").ToList();
+                ToonProjecten(appartementProjecten);
+            };
+
+            Label lblKantoor = new Label();
+            lblKantoor.BackColor = Color.FromArgb(21, 25, 50);
+            lblKantoor.Location = new Point(0, 250);
+            lblKantoor.Size = new Size(menuPanel.Width, 50);
+            lblKantoor.ForeColor = Color.White;
+            lblKantoor.Text = "Kantoor";
+            lblKantoor.BorderStyle = BorderStyle.FixedSingle;
+            lblKantoor.TextAlign = ContentAlignment.MiddleCenter;
+            lblKantoor.Font = new Font(lblKantoor.Font.FontFamily, 15, FontStyle.Regular);
+            menuPanel.Controls.Add(lblKantoor);
+
+            menuLabels.Add(lblKantoor);
+
+            lblKantoor.Click += (sender, e) =>
+            {
+                GeselecteerdMenu(lblKantoor);
+                List<Project> kantoorProjecten = alleProjecten.Where(p => p.TypeProject == "Kantoor").ToList();
+                ToonProjecten(kantoorProjecten);
+            };
+
         }
         void loadMain()
         {
@@ -1025,6 +1133,16 @@ namespace project_Bernard_Libert
                 ToonProjecten(gesorteerdeProjecten);
             }
             oplopend = !oplopend;
+        }
+        void GeselecteerdMenu(Label geselecteerdLabel)
+        {
+            panelLog.Visible = false;
+            panelHome.Visible = true;
+            foreach (Label label in menuLabels) 
+            {
+                label.BackColor = Color.FromArgb(21, 25, 50);
+            }
+            geselecteerdLabel.BackColor = Color.FromArgb(0, 120, 200);
         }
     }
     // meer indelingen
